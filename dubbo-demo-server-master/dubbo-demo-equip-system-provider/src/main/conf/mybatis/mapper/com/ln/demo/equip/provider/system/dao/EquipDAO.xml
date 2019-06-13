@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ln.demo.equip.provider.system.dao.EquipDAO">
+    <resultMap id="equipMap" type="Equip">
+        <id column="id" property="id" />
+        <result column="sbxh" property="sbxh" />
+        <result column="sblb" property="sblb" />
+        <result column="sbmc" property="sbmc" />
+        <result column="sbzt" property="sbzt" />
+        <result column="xb" property="xb" />
+        <result column="cz" property="cz" />
+        <result column="cjxx" property="cjxx" />
+        <result column="syrq" property="syrq" />
+        <result column="wxjl" property="wxjl" />
+        <result column="bjghjl" property="bjghjl" />
+        <result column="is_locked" property="locked" />        
+    </resultMap>
+
+	<select id="countEquip" parameterType="Map" resultType="int">
+		SELECT COUNT(*) FROM equipManage_equipMes
+		<where>
+			<if test="name != null">
+				AND sbmc LIKE "%"#{name}"%"
+			</if>
+		</where>
+	</select>
+	<select id="listEquip" parameterType="PageRequest" resultMap="equipMap">
+        SELECT * FROM equipManage_equipMes
+		<where>
+            <if test="parameters.name != null">
+                AND sbmc LIKE "%"#{parameters.name}"%"
+            </if>
+		</where>
+		LIMIT #{limit} OFFSET #{offset}
+	</select>
+	
+	<insert id="saveEquip" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO equipManage_equipMes(sbxh,sblb,sbmc,sbzt,xb,cz,cjxx,syrq,wxjl,bjghjl,is_locked)
+        VALUES(#{sbxh}, #{sblb},#{sbmc},#{sbzt},#{xb},#{cz},#{cjxx},#{syrq},#{wxjl},#{bjghjl}, #{locked})	   
+	</insert>
+	
+	<select id="getById" resultMap="equipMap">
+	   SELECT * FROM equipManage_equipMes WHERE id=#{id}
+	</select>
+	
+	<update id="updateEquip">
+	   UPDATE equipManage_equipMes SET sbxh=#{sbxh}, sblb=#{sblb},sbmc=#{sbmc}, sbzt=#{sbzt},xb=#{xb},cz=#{cz},cjxx=#{cjxx},syrq=#{syrq},wxjl=#{wxjl},bjghjl=#{bjghjl},is_locked=#{locked}
+	   WHERE id=#{id}
+	</update>
+	
+	<delete id="removeEquip">
+	   DELETE FROM equipManage_equipMes WHERE id=#{id}
+	</delete>
+	
+	<select id="listAllEquip" resultMap="equipMap">
+	   SELECT * FROM equipManage_equipMes WHERE is_locked=0
+	</select>
+</mapper>  
